@@ -4,5 +4,17 @@ icon: fas fa-info-circle
 order: 4
 ---
 
-> Add Markdown syntax content to file `_tabs/about.md`{: .filepath } and it will show up on this page.
-{: .prompt-tip }
+## 안녕하세요
+
+백엔드 개발을 주로 하고 있습니다. 업무를 하다 보면 크고 작은 문제들을 마주치게 되는데, 그 과정에서 배운 것들을 기록하는 공간입니다.
+
+### 관심사
+
+- **가독성 좋은 코드**: 동작하는 코드보다 읽기 쉬운 코드를 선호합니다
+- **적정 설계**: 오버엔지니어링보다는 상황에 맞는 알맞은 수준의 설계를 추구합니다
+- **기술의 연결**: 신기술에 관심이 많지만, 검증된 기술을 새로운 맥락에서 활용하는 것도 즐깁니다
+
+### 연락처
+
+- Email: metamong4545@gmail.com
+- GitHub: [je0ngw00](https://github.com/je0ngw00)
