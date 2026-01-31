@@ -1,6 +1,6 @@
 ---
 title: "Git Worktree + Claude Code: 터미널 여러 개로 동시에 개발하기"
-date: 2026-01-31 21:00:00 +0900
+date: 2026-01-31 09:00:00 +0900
 categories: [AI, Claude Code]
 tags: [claude-code, git-worktree, parallel-development, productivity]
 ---
