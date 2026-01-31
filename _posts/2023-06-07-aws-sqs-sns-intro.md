@@ -11,7 +11,7 @@ tags: [aws, sqs, sns, event-driven, spring, java]
 
 > **시리즈**: [SQS+SNS vs Kafka 비교](/posts/sqs-sns-vs-kafka/) · [LocalStack으로 로컬 테스트 환경 구축하기](/posts/localstack-sqs-sns-part1/)
 >
-> **📌 2025-01 업데이트**: Spring Cloud AWS 3.x 사용법은 [LocalStack 2편](/posts/localstack-sqs-sns-part2/)을 참고하세요. 아래 코드는 2.x 버전 기준입니다.
+> **📌 2026-01 업데이트**: Spring Cloud AWS 3.x 사용법은 [LocalStack 2편](/posts/localstack-sqs-sns-part2/)을 참고하세요. 아래 코드는 2.x 버전 기준입니다.
 
 ## SNS와 SQS
 

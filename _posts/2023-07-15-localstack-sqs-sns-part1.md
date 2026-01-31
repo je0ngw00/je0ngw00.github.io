@@ -10,6 +10,8 @@ tags: [localstack, aws, sqs, sns, docker, testing]
 운영 환경에서 AWS SNS + SQS를 사용하는데, 로컬 개발 시 매번 AWS 개발 환경에 연결해서 테스트하는 것이 불편했습니다. LocalStack을 도입하여 로컬에서 AWS 환경을 에뮬레이션하고, 테스트를 더 자유롭게 할 수 있게 된 경험을 공유합니다.
 
 > **시리즈**: [AWS SQS+SNS 기본 개념](/posts/aws-sqs-sns-intro/) · [SQS+SNS vs Kafka 비교](/posts/sqs-sns-vs-kafka/) · [2편: Spring Boot 통합 테스트](/posts/localstack-sqs-sns-part2/)
+>
+> **📌 2026-01 업데이트**: LocalStack 최신 버전 4.x 기준으로 업데이트했습니다. LocalStack 4.0부터 상당한 성능 개선과 AWS 서비스 호환성이 향상되었습니다.
 
 ## LocalStack이란?
 
@@ -38,7 +40,7 @@ version: '3.8'
 
 services:
   localstack:
-    image: localstack/localstack:3.0  # 최신 버전 사용
+    image: localstack/localstack:4.0  # 최신 버전 사용
     container_name: localstack
     ports:
       - "4566:4566"              # 모든 서비스 단일 포트
@@ -220,7 +222,7 @@ cloud:
 
 ### 1. 버전 호환성
 
-LocalStack 버전에 따라 지원하는 AWS API가 다릅니다. `localstack/localstack:3.0` 이상을 권장합니다.
+LocalStack 버전에 따라 지원하는 AWS API가 다릅니다. `localstack/localstack:4.0` 이상을 권장합니다. 4.x 버전부터 성능이 크게 개선되었고, AWS 서비스 호환성도 향상되었습니다.
 
 ### 2. 데이터 영속화
 

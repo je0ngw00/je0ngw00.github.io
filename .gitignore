@@ -29,3 +29,6 @@ assets/js/dist
 # Claude Code
 .claude/
 CLAUDE.md
+
+# Personal notes (not for git)
+NEXT_POSTS.md

@@ -354,3 +354,9 @@ public class FakePaymentClient implements PaymentClient {
 | DIP + Fake | 빠름 | 높음 | 쉬움 |
 
 Mockito가 나쁜 것은 아닙니다. 상황에 따라 적절히 선택하면 됩니다. 다만, **테스트가 보내는 신호(설계 문제)를 Mockito로 덮어버리지 않도록** 주의해야 합니다.
+
+---
+
+**다음으로 읽으면 좋은 글:**
+- [LocalStack으로 AWS SQS/SNS 로컬 테스트 환경 구축하기](/posts/localstack-sqs-sns-part1/) - 외부 서비스 의존성을 로컬에서 테스트하기
+- [상속보다 컴포지션: 결제 시스템 리팩토링 사례](/posts/composition-over-inheritance/) - DIP 적용을 통한 유연한 설계

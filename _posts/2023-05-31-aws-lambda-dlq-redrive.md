@@ -324,3 +324,9 @@ def lambda_handler(event, context):
 - Lambda 사용 시 **콜드 스타트**를 고려해야 하지만, 배치 작업에서는 큰 문제가 아닙니다
 - 2023년 6월부터 **AWS Redrive API**가 제공되어 더 간단하게 구현할 수 있습니다
 - 커스텀 로직이 필요한 경우에만 직접 구현을 고려하세요
+
+---
+
+**다음으로 읽으면 좋은 글:**
+- [AWS Lambda CI/CD 파이프라인 구축하기: CodeCommit + CodePipeline](/posts/aws-lambda-cicd/) - Lambda 함수 배포 자동화
+- [AWS SNS + SQS로 이벤트 기반 아키텍처 구축하기](/posts/aws-sqs-sns-intro/) - DLQ와 함께 사용하는 메시징 시스템

@@ -11,7 +11,7 @@ tags: [localstack, aws, sqs, sns, spring-boot, testcontainers, testing]
 
 > **시리즈**: [1편: LocalStack 환경 구성](/posts/localstack-sqs-sns-part1/) · [AWS SQS+SNS 기본 개념](/posts/aws-sqs-sns-intro/)
 >
-> **📌 2025-01 업데이트**: Spring Cloud AWS 버전을 3.3.0으로 업데이트했습니다.
+> **📌 2026-01 업데이트**: LocalStack 버전을 4.0으로 업데이트했습니다. Spring Cloud AWS는 3.3.0 버전을 사용합니다 (4.0은 RC 상태).
 
 ## 의존성 설정
 
@@ -211,7 +211,7 @@ class OrderEventIntegrationTest {
 
     @Container
     static LocalStackContainer localStack = new LocalStackContainer(
-            DockerImageName.parse("localstack/localstack:3.0")
+            DockerImageName.parse("localstack/localstack:4.0")
     )
     .withServices(Service.SQS, Service.SNS)
     .withEnv("DEFAULT_REGION", "ap-northeast-2");
@@ -314,7 +314,7 @@ class OrderEventListenerTest {
 
     @Container
     static LocalStackContainer localStack = new LocalStackContainer(
-            DockerImageName.parse("localstack/localstack:3.0"))
+            DockerImageName.parse("localstack/localstack:4.0"))
         .withServices(Service.SQS);
 
     @DynamicPropertySource
@@ -359,7 +359,7 @@ public abstract class AbstractLocalStackTest {
 
     @Container
     protected static LocalStackContainer localStack = new LocalStackContainer(
-            DockerImageName.parse("localstack/localstack:3.0"))
+            DockerImageName.parse("localstack/localstack:4.0"))
         .withServices(Service.SQS, Service.SNS)
         .withEnv("DEFAULT_REGION", "ap-northeast-2")
         .withReuse(true);  // 컨테이너 재사용으로 테스트 속도 향상
@@ -392,7 +392,7 @@ class MyIntegrationTest extends AbstractLocalStackTest {
 
 | 항목 | 내용 |
 |------|------|
-| LocalStack 버전 | 3.0 이상 권장 |
+| LocalStack 버전 | 4.0 이상 권장 |
 | Spring Cloud AWS | 3.3.0 (io.awspring.cloud) |
 | 통합 테스트 | Testcontainers LocalStack 모듈 |
 | 포트 | 4566 (단일 포트) |

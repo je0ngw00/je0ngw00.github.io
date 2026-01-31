@@ -231,3 +231,9 @@ public class ProductResponse {
 런타임 에러는 QA나 운영 중에 발견될 수 있어 리스크가 큽니다. 의존성 분리가 중요하다면 조회용 DTO와 응답용 DTO를 분리하는 방법으로 해결할 수 있습니다.
 
 저는 실무에서 `@QueryProjection`을 선호합니다.
+
+---
+
+**다음으로 읽으면 좋은 글:**
+- [Querydsl Group By 쿼리에서 페이징 처리하기](/posts/querydsl-groupby-paging/) - Group By와 페이징을 함께 사용할 때 주의할 점
+- [Querydsl 대용량 엑셀 다운로드 시 OutOfMemory 개선하기](/posts/querydsl-excel-outofmemory/) - 대용량 데이터 조회 시 메모리 관리

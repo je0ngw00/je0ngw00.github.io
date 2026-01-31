@@ -223,3 +223,9 @@ public class CartItems {
 | 명확한 의미 | 타입 자체가 문서 역할 |
 
 컬렉션을 단순히 데이터 저장소로 쓰지 말고, 행위를 가진 객체로 만들어 보시기 바랍니다.
+
+---
+
+**다음으로 읽으면 좋은 글:**
+- [정적 팩토리 메서드: from, of, getInstance 네이밍의 의미](/posts/static-factory-method/) - 객체 생성을 캡슐화하는 또 다른 방법
+- [상속보다 컴포지션: 결제 시스템 리팩토링 사례](/posts/composition-over-inheritance/) - 객체 합성으로 유연한 설계 만들기

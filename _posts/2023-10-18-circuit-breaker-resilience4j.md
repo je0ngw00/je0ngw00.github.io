@@ -5,6 +5,8 @@ categories: [Development, Spring]
 tags: [resilience4j, circuit-breaker, spring-boot, fault-tolerance, java]
 ---
 
+> **📌 2026-01 업데이트**: Resilience4j 최신 버전 2.3.0 기준으로 업데이트했습니다.
+
 ## 개요
 
 회원 도메인 장애로 쿠폰 서비스까지 영향을 받는 일이 발생했습니다. 외부 연동 장애에 유연하게 대응하고 시스템 회복력을 높이기 위해 Circuit Breaker 패턴을 도입했습니다.
@@ -54,14 +56,14 @@ Hystrix는 2018년 이후 유지보수 모드로 전환되어 더 이상 새 기
 <dependency>
     <groupId>io.github.resilience4j</groupId>
     <artifactId>resilience4j-spring-boot3</artifactId>
-    <version>2.2.0</version>
+    <version>2.3.0</version>
 </dependency>
 
 <!-- Spring Boot 2.x -->
 <dependency>
     <groupId>io.github.resilience4j</groupId>
     <artifactId>resilience4j-spring-boot2</artifactId>
-    <version>2.2.0</version>
+    <version>2.3.0</version>
 </dependency>
 ```
 
@@ -361,3 +363,9 @@ class CircuitBreakerTest {
 | `minimumNumberOfCalls` | 5-10 | 초기 요청은 제외 |
 
 Circuit Breaker는 장애 전파를 막는 첫 번째 방어선입니다. Fallback 전략을 잘 설계하면 외부 서비스 장애에도 사용자 경험을 유지할 수 있습니다.
+
+---
+
+**다음으로 읽으면 좋은 글:**
+- [트랜잭션 내 외부 호출 분리로 커넥션 풀 병목 해결하기](/posts/transaction-external-call/) - 외부 API 호출 시 트랜잭션 관리
+- [AWS SNS + SQS로 이벤트 기반 아키텍처 구축하기](/posts/aws-sqs-sns-intro/) - 비동기 메시징으로 시스템 결합도 낮추기
