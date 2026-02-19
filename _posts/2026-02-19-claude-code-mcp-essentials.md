@@ -1,6 +1,6 @@
 ---
 title: "Claude Code를 10배 강하게 만드는 MCP 6가지"
-date: 2026-02-19 09:00:00 +0900
+date: 2026-02-19 00:00:00 +0900
 categories: [AI, Claude Code]
 tags: [claude-code, mcp, tavily, context7, playwright, github, model-context-protocol]
 ---
