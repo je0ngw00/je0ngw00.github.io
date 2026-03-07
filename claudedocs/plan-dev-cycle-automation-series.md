@@ -20,54 +20,6 @@
 
 ---
 
-## Part 1 작성 계획
-
-### 파일명 및 Front Matter
-
-```yaml
-파일명: 2026-02-28-claude-code-dev-cycle-part1.md
-title: "Jira 티켓에서 PR까지, Claude Code 스킬로 자동화하기 — jira-start와 jira-sprint 구축기"
-date: 2026-02-28 00:00:00 +0900
-categories: [AI, Claude Code]
-tags: [claude-code, custom-skill, jira-automation, git-worktree, developer-experience]
-```
-
-### 섹션 구조 (5개, 초안 7개에서 정리)
-
-초안의 7개 섹션에서 구조를 정리합니다. 섹션 2(배경)와 섹션 5(스킬 체이닝)의 중복을 제거하고 핵심 경험에 집중합니다.
-
-| # | 섹션 | 목표 분량 | 핵심 내용 |
-|---|---|---|---|
-| 1 | 리드 — "Jira 열고 브랜치 따고"의 반복 | 350자 | PR 83시간 통계 + 시작 단계의 마찰 |
-| 2 | Custom Skill이란 + references/ 복리 효과 | 500자 | .claude/commands/ 구조, Bitbucket→Jira 재사용 |
-| 3 | jira-start: 이슈 선택부터 브랜치까지 | 700자 | 7단계 파이프라인, API v3 디버깅, UX 개선 |
-| 4 | jira-sprint: 워크트리로 동시에 여러 이슈 처리 | 700자 | 워크트리 병렬 구현 실무 사용 경험, Max 5 설계 이유 |
-| 5 | 마무리 + Part 2 예고 | 350자 | 스킬 체이닝 맵 요약, 다음 편 연결 |
-
-**총 목표: 2600자 본문 + 코드 블록**
-
-### 핵심 결정사항
-
-**포함 O**
-- Jira API v3 디버깅 3종 (v2 410 deprecated, ADF 파싱, Transition ID 동적 탐색) — 실무 경험의 핵심
-- UX 개선 스토리: Summary 45자 → full summary + 상태 우선 정렬
-- references/ 복리 효과: Bitbucket shell-env-rules.md를 Jira 스킬에서 그대로 재사용
-- jira-sprint 실무 사용 경험 — 현재 여러 이슈를 워크트리로 병렬 처리 중
-- RESEARCH-1 통계: PR 83시간, AI PR 98% 증가 + 리뷰 91% 증가 역설
-
-**포함 X**
-- `/my:pr-review-apply`, Ralph Loop 상세 내용 → Part 2로
-- 스킬 체이닝 전체 다이어그램 (`jira-start → commit → finalize → PR → review → Ralph Loop`) → Part 2에서 완성
-- Part 1 마무리의 체이닝은 `jira-start → commit → finalize → PR 생성`까지만
-- AI 코드 리뷰 시장 수치(CodeRabbit, Copilot 점유율) → Part 2
-- Closed-Loop Development, Replit Agent 3 등 업계 트렌드 → Part 2
-
-**톤 주의사항**
-- jira-sprint는 실제 실무 사용 경험으로 서술 ("지금 이 글을 쓰는 동안에도 워크트리에서 여러 이슈를 병렬 처리 중")
-- "스킬이 제품처럼 진화한다"는 관점 유지 (v1 → v2 개선 스토리)
-
----
-
 ## Part 2 작성 계획
 
 ### 파일명 및 Front Matter
@@ -168,11 +120,11 @@ Ralph Loop과 pr-review-apply를 연결하려면 "새 리뷰 코멘트가 생겼
 - [x] `_posts/2026-02-28-claude-code-dev-cycle-part1.md` 작성
 - [x] 분량 확인 (3000자 내외 충족)
 - [x] 기존 git-worktree 포스트 중복 확인 (이전 포스트 링크로 처리)
-- [ ] PR 생성 (`add-post-dev-cycle-part1` 브랜치)
+- [x] PR 생성 (`add-post-dev-cycle-part1` 브랜치) — PR #11
 
 ### Part 2
-- [ ] Part 1 발행 확인 후 착수
-- [ ] 섹션 5 "미완성 단계" 기술적 도전(폴링 레이어) 서술 확정
-- [ ] `_posts/2026-03-07-claude-code-dev-cycle-part2.md` 작성
-- [ ] 기존 ralph-loop 포스트 링크 삽입
-- [ ] PR 생성 (`add-post-dev-cycle-part2` 브랜치)
+- [x] Part 1 발행 확인 후 착수
+- [x] 섹션 5 "미완성 단계" 기술적 도전(폴링 레이어) 서술 확정
+- [x] `_posts/2026-03-06-claude-code-dev-cycle-part2.md` 작성
+- [x] 기존 ralph-loop 포스트 링크 삽입
+- [x] PR 생성 (`add-post-dev-cycle-part2` 브랜치) — PR #13
