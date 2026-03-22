@@ -22,6 +22,12 @@ package-lock.json
 !.vscode/extensions.json
 !.vscode/tasks.json
 
+# OS files
+.DS_Store
+
+# Obsidian
+_posts/.obsidian/
+
 # Misc
 _sass/vendors
 assets/js/dist
