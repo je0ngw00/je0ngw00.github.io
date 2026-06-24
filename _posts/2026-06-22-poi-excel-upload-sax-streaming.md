@@ -38,6 +38,18 @@ WorkbookFactory.create(inputStream).use { wb ->
 
 XSSF는 5만 행은 버티지만 10만 행부터 256MB 천장을 못 넘고 OOM이 났습니다(이미 10만에서 터지니 50만은 따로 재지 않았습니다). 반면 SAX는 5만이든 50만이든 140~160MB에서 평탄했습니다. 행을 10배 늘려도 힙이 거의 그대로라는 게 핵심입니다. 힙을 키우는 건 OOM이 나는 행 수를 잠깐 미루는 것뿐이고, 기울기 자체를 눕히려면 읽는 방식을 바꿔야 했습니다.
 
+측정 하니스가 실제로 뱉은 줄을 그대로 옮기면 이렇습니다.
+
+```bash
+./gradlew measure -Pxmx=256m --args="xssf-read 100000"
+# [RESULT] mode=xssf-read rowsTarget=100000 processed=0 status=OOM peakHeapMB=253
+
+./gradlew measure -Pxmx=256m --args="sax-read 100000"
+# [RESULT] mode=sax-read rowsTarget=100000 processed=100000 status=OK peakHeapMB=142
+```
+
+XSSF 쪽 `processed=0`이 눈에 띕니다. 한 행도 못 읽고 죽었다는 뜻인데, `WorkbookFactory.create()`가 시트를 통째로 올리는 그 단계에서 이미 256MB를 넘겼기 때문입니다. 정작 데이터를 순회하기도 전에 적재에서 터진 셈입니다. 반대로 SAX는 10만 행을 끝까지 읽고도 142MB에서 멈췄습니다.
+
 ## SAX 이벤트 방식으로 한 행씩 읽기
 
 POI에는 전체를 올리지 않고 `<row>`를 만날 때마다 콜백을 받는 이벤트 API가 있습니다. `XSSFReader`로 시트 XML 스트림을 열고, `XSSFSheetXMLHandler`에 핸들러를 물려 행 단위로 받는 구조입니다.
@@ -65,6 +77,23 @@ class StreamingXlsxReader {
 
 콜백을 받는 핸들러는 "현재 행"만 들고 있다가 행이 끝나면 넘기고 비웁니다. 업무 데이터로 보면 메모리에 남는 건 현재 행뿐이고(스타일·공유 문자열 같은 전역 구조는 따로 남습니다), 위 표의 평탄한 선이 이렇게 나옵니다. 라이브러리를 갈아끼운 게 아니라 같은 POI 안에서 읽는 방식만 바꾼 것입니다.
 
+핸들러는 행이 끝나는 순간 첫 행을 헤더로 기억해 두고, 이후 행은 헤더명 → 값 맵으로 만들어 콜백에 넘깁니다. 컬럼 순서나 불필요한 컬럼(id 등)에 기대지 않아서, 헤더 이름만 맞으면 됩니다.
+
+```kotlin
+override fun endRow(rowNum: Int) {
+    val row = current.toList()
+    if (header == null) {                       // 첫 행을 헤더로
+        header = row.map { it?.trim()?.lowercase() ?: "" }
+        return
+    }
+    val map = LinkedHashMap<String, String?>()
+    header!!.forEachIndexed { i, key ->
+        if (key.isNotEmpty()) map[key] = row.getOrNull(i)
+    }
+    onRow(map)                                  // {email=..., name=..., amount=...}
+}
+```
+
 ## SAX를 쓰며 걸린 함정 셋
 
 편해 보이지만, 전체 모델이 주던 편의를 잃기 때문에 직접 메워야 하는 구멍이 몇 개 있었습니다.
@@ -85,6 +114,46 @@ override fun cell(cellRef: String?, value: String?, comment: XSSFComment?) {
 **2. 공유 문자열 테이블은 여전히 메모리에 있다.** SAX가 묶어주는 건 "행·셀 객체"이지 문자열 전체가 아닙니다. `ReadOnlySharedStringsTable`은 이름 그대로 읽기 전용이라 가볍긴 하지만, 고유 문자열이 수백만 개면 이 테이블이 그대로 힙에 올라갑니다. SAX로 바꿨다고 문자열 메모리까지 공짜가 되는 건 아니라는 점은 알아둬야 합니다. 이게 병목이라면 공유 문자열을 디스크로 빼는 `poi-shared-strings` 같은 보조 라이브러리도 있습니다.
 
 **3. xlsx는 ZIP이라 스트림만으로는 깔끔하지 않다.** xlsx는 내부적으로 XML 여러 개를 묶은 ZIP(OPC 패키지)입니다. `OPCPackage.open(InputStream)`으로 스트림에서 바로 열면 POI가 ZIP 전체를 힙에 버퍼링하지만, 파일로 열면 디스크에서 랜덤 액세스로 필요한 파트만 찾아 읽어 메모리를 덜 씁니다. POI 문서도 파일 경로 쪽이 가볍다고 못 박습니다. 그래서 업로드를 받으면 일단 로컬 임시파일로 떨어뜨린 뒤 그 파일을 SAX로 읽는 경로가 가장 말썽이 없었습니다.
+
+## 읽은 행을 1,000건씩 DB로 흘려보내기
+
+읽기를 평탄하게 만들어도, 읽은 행을 한 리스트에 다 모아 한 번에 `INSERT` 하면 이번엔 그 리스트가 메모리에 쌓입니다. 읽는 쪽만 고치고 적재를 통째로 모으면 OOM 지점만 뒤로 옮겨가는 셈입니다. 그래서 읽으면서 1,000건씩 모았다가 DB로 넣고 비웁니다. 메모리에는 늘 1,000건짜리 버퍼와 현재 SAX 행만 남습니다.
+
+```kotlin
+private const val FLUSH_SIZE = 1000
+
+reader.read(tmp) { row ->                       // row: 헤더명 → 값 맵
+    val email = row["email"]?.trim()
+    val name = row["name"]?.trim()
+    if (email.isNullOrEmpty() && name.isNullOrEmpty()) return@read   // 빈 행 skip
+    buffer.add(arrayOf(email, name, parseAmount(row["amount"])))
+    if (buffer.size >= FLUSH_SIZE) {
+        repo.insertBatch(buffer)                // 1,000건 모이면 한 번에
+        buffer.clear()
+    }
+}
+if (buffer.isNotEmpty()) repo.insertBatch(buffer)   // 잔여분
+```
+
+적재는 JPA 대신 JDBC 배치로 했습니다. 수만 건을 영속성 컨텍스트에 올리면 그쪽이 또 메모리를 먹고 느려지는데, 단순 `INSERT`라면 `JdbcTemplate.batchUpdate`가 더 빠르고 메모리도 안정적입니다.
+
+```kotlin
+fun insertBatch(rows: List<Array<Any?>>) {
+    jdbc.batchUpdate("INSERT INTO members (email, name, amount) VALUES (?, ?, ?)", rows)
+}
+```
+
+값을 바꾸는 데도 현실의 지저분함이 끼어듭니다. 사용자가 채운 엑셀의 금액 칸은 `1,000`(천단위 콤마), `100.0`(소수 서식), `1E+5`(지수 서식)처럼 제각각이라 그대로 `Long`으로 바꾸면 깨집니다. `BigDecimal`로 한 번 받아 정리했습니다.
+
+```kotlin
+private fun parseAmount(raw: String?): Long? {
+    val s = raw?.trim()?.replace(",", "")
+    if (s.isNullOrEmpty()) return null
+    return BigDecimal(s).toLong()               // "1,000" "100.0" "1E+5" 모두 처리
+}
+```
+
+업로드 한 건은 한 트랜잭션으로 묶었습니다. 중간 행에서 파싱이 깨지면 앞서 넣은 배치까지 롤백돼, 절반만 들어간 채로 끝나 데이터가 어중간해지는 일을 막습니다.
 
 ## 측정을 믿으려고 신경 쓴 것
 
